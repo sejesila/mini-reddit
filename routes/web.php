@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommunityPostController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -24,6 +25,7 @@ Auth::routes(['verify'=>true]);
 Route::group(['middleware'=>['auth','verified']],function (){
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('communities', CommunityController::class);
+    Route::resource('communities.posts', CommunityPostController::class);
 });
 
 
