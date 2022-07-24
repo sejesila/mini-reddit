@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\PostCommentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -26,6 +27,7 @@ Route::group(['middleware'=>['auth','verified']],function (){
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('communities', CommunityController::class);
     Route::resource('communities.posts', CommunityPostController::class);
+    Route::resource('posts.comments', PostCommentController::class);
     Route::get('posts/{post_id}/vote/{vote}',[CommunityPostController::class,'vote'])->name('post.vote');
 });
 
