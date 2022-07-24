@@ -18,17 +18,16 @@ use App\Http\Controllers\CommunityController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Auth::routes(['verify'=>true]);
 Route::group(['middleware'=>['auth','verified']],function (){
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
     Route::resource('communities', CommunityController::class);
     Route::resource('communities.posts', CommunityPostController::class);
     Route::resource('posts.comments', PostCommentController::class);
     Route::get('posts/{post_id}/vote/{vote}',[CommunityPostController::class,'vote'])->name('post.vote');
+    Route::post('posts/{post_id}/report',[CommunityPostController::class,'report'])->name('post.report');
 });
 
 

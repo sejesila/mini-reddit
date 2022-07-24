@@ -6,10 +6,12 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostVote;
+use App\Notifications\PostReportNotification;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 
 class CommunityPostController extends Controller
@@ -82,7 +84,7 @@ class CommunityPostController extends Controller
      */
     public function edit(Community $community, Post $post)
     {
-        if ($post->author_id != auth()->id()) {
+        if (Gate::denies('edit-post',$post))  {
             abort(403);
         }
         return view('posts.edit', compact('community', 'post'));
@@ -98,7 +100,7 @@ class CommunityPostController extends Controller
      */
     public function update(StorePostRequest $request, Community $community, Post $post)
     {
-        if ($post->author_id != auth()->id()) {
+        if (Gate::denies('edit-post',$post))  {
             abort(403);
         }
         $post->update($request->validated());
@@ -132,7 +134,7 @@ class CommunityPostController extends Controller
      */
     public function destroy(Community $community, Post $post)
     {
-        if ($post->author_id != auth()->id()) {
+        if (Gate::denies('delete-post',$post)) {
             abort(403);
         }
         $post->delete();
@@ -151,9 +153,17 @@ class CommunityPostController extends Controller
             'user_id'=>auth()->id(),
             'vote'=>$vote
         ]);
-        $post->increment('votes',$vote);
+//        $post->increment('votes',$vote);
         }
         return redirect()->route('communities.show',$post->community);
 
+    }
+
+    public function report($post_id)
+    {
+        $post = Post::with('community.user')->findOrFail($post_id);
+        $post->community->user->notify(new PostReportNotification($post));
+
+        return redirect()->route('communities.posts.show', [$post->community,$post])->with('message','Your report has been sent');
     }
 }
