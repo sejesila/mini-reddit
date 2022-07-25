@@ -44,9 +44,10 @@
                     <hr>
                     @can('edit-post',$post)
 
-                        <a href=" {{route('communities.posts.edit',[$community,$post])}}"
+                        <a href=" {{route('communities.posts.edit',[$post->community,$post])}}"
                            class="btn-primary btn btn-sm">Edit
-                            Post</a>
+                            Post
+                        </a>
                     @endcan
 {{--                usig gates to speficy permissions--}}
                 @can('delete-post',$post)
@@ -54,7 +55,7 @@
 
 
                     <form method="POST" style="display: inline-block"
-                          action="{{route('communities.posts.destroy',[$community,$post])}}">
+                          action="{{route('communities.posts.destroy',[$post->community,$post])}}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are  you sure')">

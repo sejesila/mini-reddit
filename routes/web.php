@@ -20,14 +20,16 @@ use App\Http\Controllers\CommunityController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Auth::routes(['verify'=>true]);
-Route::group(['middleware'=>['auth','verified']],function (){
+Route::get('/c/{slug}', [CommunityController::class, 'show'])->name('communities.show');
+Route::get('/post/{postId}', [CommunityPostController::class, 'show'])->name('communities.posts.show');
 
-    Route::resource('communities', CommunityController::class);
-    Route::resource('communities.posts', CommunityPostController::class);
+Auth::routes(['verify' => true]);
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::resource('communities', CommunityController::class)->except('show');
+    Route::resource('communities.posts', CommunityPostController::class)->except('show');
     Route::resource('posts.comments', PostCommentController::class);
-    Route::get('posts/{post_id}/vote/{vote}',[CommunityPostController::class,'vote'])->name('post.vote');
-    Route::post('posts/{post_id}/report',[CommunityPostController::class,'report'])->name('post.report');
+    Route::get('posts/{post_id}/vote/{vote}', [CommunityPostController::class, 'vote'])->name('post.vote');
+    Route::post('posts/{post_id}/report', [CommunityPostController::class, 'report'])->name('post.report');
 });
 
 

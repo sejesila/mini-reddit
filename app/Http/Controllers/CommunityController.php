@@ -57,12 +57,12 @@ class CommunityController extends Controller
      * @param Community $community
      * @return Application|Factory|View
      */
-    public function show(Community $community)
+    public function show($slug)
     {
-        $query = $community->posts();
+        $community = Community::where('slug',$slug)->firstOrFail();
+        $query = $community->posts()->with('votesRel');
         if (request('sort','') == 'popular'){
             $query->orderByDesc('votes');
-
         }
         else{
             $query->latest('id');
