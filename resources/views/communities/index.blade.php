@@ -18,7 +18,7 @@
                       </thead>
                       <tbody>
                       @foreach($communities as $community)
-                          <tr>
+                          <tr class="community-item">
                               <td><a href="{{ route('communities.show',$community) }}">{{$community->name}}</a></td>
                               <td><a href="{{ route('communities.edit',$community) }}" class="btn btn-sm btn-primary">Edit</a>
                                   <form method="POST" style="display: inline-block" action="{{route('communities.destroy',$community)}}">
