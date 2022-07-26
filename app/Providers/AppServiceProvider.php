@@ -30,12 +30,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //use bootstrap pagination instead of the default which is tailwind
-//         Paginator::useBootstrap();
+        Paginator::useBootstrap();
 
-//         View::share('newestPosts', Post::with('community')->latest()->take(10)->get());
-//         View::share('newestCommunities', Community::withCount('posts')->latest()->take(10)->get());
+        View::share('newestPosts', Post::with('community')->latest()->take(10)->get());
+        View::share('newestCommunities', Community::withCount('posts')->latest()->take(10)->get());
 
-//         PostVote::observe(PostVoteObserver::class);
+        PostVote::observe(PostVoteObserver::class);
 
     }
 }
